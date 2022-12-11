@@ -11,6 +11,20 @@
 		},
 		"ghcr.io/devcontainers/features/rust:1": {},
 		"ghcr.io/devcontainers-contrib/features/ocaml-asdf:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vadimcn.vscode-lldb",
+				"hediet.vscode-drawio",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"rust-lang.rust-analyzer",
+				"WakaTime.vscode-wakatime",
+				"ocamllabs.ocaml-platform",
+				"llvm-vs-code-extensions.vscode-clangd"
+			]
+		}
 	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
