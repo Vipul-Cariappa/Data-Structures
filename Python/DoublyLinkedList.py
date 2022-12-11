@@ -4,17 +4,17 @@ class DListNode:
         self.next = None
         self.previous = None
 
-    def __str__(self):
-        if self.next == None and self.previous == None:
-            return f"previous: None self: {id(self)} next: None"
+    # def __str__(self):
+    #     if self.next == None and self.previous == None:
+    #         return f"previous: None self: {id(self)} next: None"
 
-        elif self.next == None:
-            return f"previous: {id(self.previous)} self: {id(self)} next: None"
+    #     elif self.next == None:
+    #         return f"previous: {id(self.previous)} self: {id(self)} next: None"
 
-        elif self.previous == None:
-            return f"previous: None self: {id(self)} next: {id(self.next)}"
+    #     elif self.previous == None:
+    #         return f"previous: None self: {id(self)} next: {id(self.next)}"
 
-        return f"previous: {id(self.previous)} self: {id(self)} next: {id(self.next)}"
+    #     return f"previous: {id(self.previous)} self: {id(self)} next: {id(self.next)}"
 
 
 class DoublyLinkedList:
@@ -79,7 +79,8 @@ class DoublyLinkedList:
 
         node = self.head
         self.head = node.next
-        self.head.previous = None
+        if node.next:
+            self.head.previous = None
         self.length -= 1
 
         return node.value
@@ -162,6 +163,18 @@ class DoublyLinkedList:
 
         return node.value
 
+    def __setitem__(self, index, value):
+        if index < 0 or index >= self.length:
+            raise IndexError(
+                f"Index out of Bound. Length of list {self.length}, index to get at is {index}."
+            )
+
+        node = self.head
+        for i in range(index):
+            node = node.next
+
+        node.value = value
+
     def __str__(self):
         result = "["
 
@@ -172,17 +185,17 @@ class DoublyLinkedList:
 
         return result
 
-    def __repr__(self):
-        result = "[\n"
+    # def __repr__(self):
+    #     result = "[\n"
 
-        i = self.head
-        while i != None:
-            result += "\t" + str(i) + ",\n"
-            i = i.next
+    #     i = self.head
+    #     while i != None:
+    #         result += "\t" + str(i) + ",\n"
+    #         i = i.next
 
-        result += "]"
+    #     result += "]"
 
-        return result
+    #     return result
 
 
 if __name__ == "__main__":

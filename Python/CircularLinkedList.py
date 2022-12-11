@@ -3,11 +3,11 @@ class ListNode:
         self.value = value
         self.next = None
 
-    def __str__(self):
-        if self.next == None:
-            return f"self: {id(self)} next: None"
+    # def __str__(self):
+    #     if self.next == None:
+    #         return f"self: {id(self)} next: None"
 
-        return f"self: {id(self)} next: {id(self.next)}"
+    #     return f"self: {id(self)} next: {id(self.next)}"
 
 
 class CircularLinkedList:
@@ -16,7 +16,7 @@ class CircularLinkedList:
         self.tail = None
         self.length = 0
         self._i = None  # Used for iteration
-        self._index = 0 # Used for iteration
+        self._index = 0  # Used for iteration
 
     def add_at_start(self, value):
         old_head = self.head
@@ -81,7 +81,7 @@ class CircularLinkedList:
             node = self.head
             self.head = None
             self.tail = None
-
+            self.length -= 1
             return node.value
 
         node = self.head
@@ -126,7 +126,7 @@ class CircularLinkedList:
             node = self.head
             self.head = None
             self.tail = None
-
+            self.length -= 1
             return node.value
 
         if index == 0:
@@ -179,6 +179,18 @@ class CircularLinkedList:
 
         return node.value
 
+    def __setitem__(self, index, value):
+        if index < 0 or index >= self.length:
+            raise IndexError(
+                f"Index out of Bound. Length of list {self.length}, index to get at is {index}."
+            )
+
+        node = self.head
+        for i in range(index):
+            node = node.next
+
+        node.value = value
+
     def __str__(self):
         result = "["
 
@@ -189,17 +201,17 @@ class CircularLinkedList:
 
         return result
 
-    def __repr__(self):
-        result = "[\n"
+    # def __repr__(self):
+    #     result = "[\n"
 
-        i = self.head
-        for _ in range(self.length):
-            result += "\t" + str(i) + ",\n"
-            i = i.next
+    #     i = self.head
+    #     for _ in range(self.length):
+    #         result += "\t" + str(i) + ",\n"
+    #         i = i.next
 
-        result += "]"
+    #     result += "]"
 
-        return result
+    #     return result
 
 
 if __name__ == "__main__":
