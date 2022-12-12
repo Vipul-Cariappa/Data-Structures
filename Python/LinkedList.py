@@ -11,8 +11,8 @@ class ListNode:
 
 
 class LinkedList:
-    """LinkedList
-    """
+    """LinkedList"""
+
     def __init__(self, values=None):
         """initialise the list with values
 
@@ -47,7 +47,7 @@ class LinkedList:
 
     def add_at_end(self, value):
         """add value at the end of the list
-        time complexity is O(n)
+        time complexity is O(1)
 
         Args:
             value (Any): value to be added
@@ -79,10 +79,7 @@ class LinkedList:
             )
 
         if index == 0:
-            new_head = ListNode(value)
-            new_head.next = self.head
-            self.head = new_head
-            self.length += 1
+            self.add_at_start(value)
             return
 
         running_node = self.head
@@ -96,7 +93,7 @@ class LinkedList:
 
     def remove_at_start(self):
         """removes the element at beginning of the list
-        time complexity is O(n)
+        time complexity is O(1)
 
         Raises:
             IndexError: when no element is present in the list
@@ -163,10 +160,7 @@ class LinkedList:
             )
 
         if index == 0:
-            node = self.head
-            self.head = node.next
-            self.length -= 1
-            return node.value
+            return self.remove_at_start()
 
         running_node = self.head
         for _ in range(index - 1):
@@ -185,6 +179,11 @@ class LinkedList:
         return self.iterator()
 
     def iterator(self):
+        """forward iterator
+
+        Yields:
+            Any: value of element
+        """
         running_node = self.head
         while running_node is not None:
             yield running_node.value

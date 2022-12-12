@@ -4,89 +4,141 @@ class DListNode:
         self.next = None
         self.previous = None
 
-    # def __str__(self):
-    #     if self.next == None and self.previous == None:
-    #         return f"previous: None self: {id(self)} next: None"
+    def __str__(self):
+        if self.next is None and self.previous is None:
+            return f"previous: None self: {id(self)} next: None"
 
-    #     elif self.next == None:
-    #         return f"previous: {id(self.previous)} self: {id(self)} next: None"
+        elif self.next is None:
+            return f"previous: {id(self.previous)} self: {id(self)} next: None"
 
-    #     elif self.previous == None:
-    #         return f"previous: None self: {id(self)} next: {id(self.next)}"
+        elif self.previous is None:
+            return f"previous: None self: {id(self)} next: {id(self.next)}"
 
-    #     return f"previous: {id(self.previous)} self: {id(self)} next: {id(self.next)}"
+        return f"previous: {id(self.previous)} self: {id(self)} next: {id(self.next)}"
 
 
 class DoublyLinkedList:
-    def __init__(self):
+    """DoublyLinkedList"""
+
+    def __init__(self, values=None):
+        """initialise the list with values
+
+        Args:
+            values (Iterable): value to be added to LinkedList
+        """
         self.head = None
+        self.tail = None
         self.length = 0
-        self._i = None  # Used for iteration
+
+        if values is None:
+            return
+
+        for i in values:
+            self.add_at_end(i)
 
     def add_at_start(self, value):
+        """add value at the start of list
+        time complexity is O(1)
+
+        Args:
+            value (Any): value to be added
+        """
         old_head = self.head
         self.head = DListNode(value)
         self.head.next = old_head
-        if old_head != None:
+        if old_head is not None:
             old_head.previous = self.head
+
+        if self.length == 0:
+            self.tail = self.head
+
         self.length += 1
 
     def add_at_end(self, value):
+        """add value at the end of the list
+        time complexity is O(1)
+
+        Args:
+            value (Any): value to be added
+        """
         if self.length == 0:
             self.head = DListNode(value)
+            self.tail = self.head
             self.length += 1
+            return
 
-        else:
-            i = self.head
-            while i != None:
-                current_node = i
-                i = i.next
-
-            current_node.next = DListNode(value)
-            current_node.next.previous = current_node
-            self.length += 1
+        self.tail.next = DListNode(value)
+        self.tail.next.previous = self.tail
+        self.tail = self.tail.next
+        self.length += 1
 
     def add_at(self, index, value):
+        """add value at the specified index
+        time complexity is O(n)
+
+        Args:
+            index (int): index to insert at
+            value (Any): value to be added
+
+        Raises:
+            IndexError: when invalid index or negative index is passed
+        """
         if index < 0 or index >= self.length:
             raise IndexError(
                 f"Index out of Bound. Length of list {self.length}, index got to insert at {index}."
             )
 
         if index == 0:
-            new_head = DListNode(value)
-            new_head.next = self.head
-            self.head.previous = new_head
-            self.head = new_head
-            self.length += 1
+            self.add_at_start(value)
+            return
 
-        else:
-            i = 1
-            running_node = self.head
-            while i < index:
-                running_node = running_node.next
-                i += 1
+        running_node = self.head
+        for _ in range(index - 1):
+            running_node = running_node.next
 
-            new_node = DListNode(value)
-            new_node.next = running_node.next
-            new_node.previous = running_node
-            new_node.next.previous = new_node
-            running_node.next = new_node
-            self.length += 1
+        new_node = DListNode(value)
+        new_node.next = running_node.next
+        new_node.previous = running_node
+        new_node.next.previous = new_node
+        running_node.next = new_node
+        self.length += 1
 
     def remove_at_start(self):
-        if self.head == None:
+        """removes the element at beginning of the list
+        time complexity is O(1)
+
+        Raises:
+            IndexError: when no element is present in the list
+
+        Returns:
+            Any: element at start of the list
+        """
+        if self.length == 0:
             raise IndexError("No elements in list to remove.")
 
         node = self.head
         self.head = node.next
-        if node.next:
+        if self.head:
             self.head.previous = None
+
+        if self.length == 0:
+            self.tail = None
+
         self.length -= 1
 
         return node.value
 
     def remove_at_end(self):
-        if self.head == None:
+        """remove the element at the end of the list
+        time complexity is O(1)
+
+        Raises:
+            IndexError: when no element is present
+
+        Returns:
+            Any: element at end of the list
+        """
+        if self.head is None:
             raise IndexError("No elements in list to remove.")
 
         if self.length == 1:
@@ -96,60 +148,76 @@ class DoublyLinkedList:
 
             return node.value
 
-        else:
-            i = self.head
-            while i.next.next != None:
-                i = i.next
+        node = self.tail
+        self.tail = node.previous
+        self.tail.next = None
+        self.length -= 1
 
-            node = i.next
-            i.next = None
-            self.length -= 1
-
-            return node.value
+        return node.value
 
     def remove_at(self, index):
+        """remove the element present at the given index
+        time complexity is O(n)
+
+        Args:
+            index (int): index of the element to be removed
+
+        Raises:
+            IndexError: when invalid or negative index is passed
+
+        Returns:
+            Any: element at the given index
+        """
         if index < 0 or index >= self.length:
             raise IndexError(
                 f"Index out of Bound. Length of list {self.length}, index got to insert at {index}."
             )
 
         if index == 0:
-            node = self.head
-            self.head = node.next
-            self.head.previous = None
-            self.length -= 1
+            return self.remove_at_start()
 
-            return node.value
+        if index == self.length - 1:
+            return self.remove_at_end()
 
-        else:
-            i = 1
-            running_node = self.head
-            while i < index:
-                running_node = running_node.next
-                i += 1
+        running_node = self.head
+        for _ in range(index - 1):
+            running_node = running_node.next
 
-            node = running_node.next
-            running_node.next = node.next
-            if node.next != None:
-                node.next.previous = running_node
-            self.length -= 1
+        node = running_node.next
+        running_node.next = node.next
+        if node.next is not None:
+            node.next.previous = running_node
+        self.length -= 1
 
-            return node.value
+        return node.value
 
     def __len__(self):
         return self.length
 
     def __iter__(self):
-        self._i = self.head
-        return self
+        return self.iterator()
 
-    def __next__(self):
-        if self._i != None:
-            current_node = self._i
-            self._i = self._i.next
-            return current_node.value
+    def iterator(self):
+        """forward iterator
 
-        raise StopIteration
+        Yields:
+            Any: value of element
+        """
+        running_node = self.head
+        while running_node is not None:
+            yield running_node.value
+            running_node = running_node.next
+
+    def backwards_iterator(self):
+        """backwards iterator
+
+        Yields:
+            Any: value of element
+        """
+        running_node = self.tail
+        while running_node is not None:
+            yield running_node.value
+            running_node = running_node.previous
 
     def __getitem__(self, index):
         if index < 0 or index >= self.length:
@@ -185,19 +253,14 @@ class DoublyLinkedList:
 
         return result
 
-    # def __repr__(self):
-    #     result = "[\n"
+    def __repr__(self):
+        result = "[\n"
 
-    #     i = self.head
-    #     while i != None:
-    #         result += "\t" + str(i) + ",\n"
-    #         i = i.next
+        i = self.head
+        while i is not None:
+            result += "\t" + str(i) + ",\n"
+            i = i.next
 
-    #     result += "]"
+        result += "]"
 
-    #     return result
-
-
-if __name__ == "__main__":
-    # TODO: running tests or implement interactions
-    ...
+        return result
