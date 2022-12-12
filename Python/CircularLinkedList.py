@@ -3,20 +3,26 @@ class ListNode:
         self.value = value
         self.next = None
 
-    # def __str__(self):
-    #     if self.next == None:
-    #         return f"self: {id(self)} next: None"
+    def __str__(self):
+        if self.next == None:
+            return f"self: {id(self)} next: None"
 
-    #     return f"self: {id(self)} next: {id(self.next)}"
+        return f"self: {id(self)} next: {id(self.next)}"
 
 
 class CircularLinkedList:
-    def __init__(self):
+    def __init__(self, values=None):
         self.head = None
         self.tail = None
         self.length = 0
         self._i = None  # Used for iteration
         self._index = 0  # Used for iteration
+
+        if values is None:
+            return
+
+        for i in values:
+            self.add_at_end(i)
 
     def add_at_start(self, value):
         old_head = self.head
@@ -153,19 +159,27 @@ class CircularLinkedList:
     def __len__(self):
         return self.length
 
-    def __iter__(self):
-        self._i = self.head
-        self._index = 0
-        return self
+    def iterator(self):
+        """forward iterator
 
-    def __next__(self):
-        if self._index < self.length:
-            self._index += 1
-            current_node = self._i
-            self._i = self._i.next
-            return current_node.value
+        Yields:
+            Any: value of element
+        """
+        running_node = self.head
+        for _ in range(self.length):
+            yield running_node.value
+            running_node = running_node.next
 
-        raise StopIteration
+    def backwards_iterator(self):
+        """backwards iterator
+
+        Yields:
+            Any: value of element
+        """
+        running_node = self.tail
+        for _ in range(self.length):
+            yield running_node.value
+            running_node = running_node.previous
 
     def __getitem__(self, index):
         if index < 0 or index >= self.length:
@@ -201,19 +215,14 @@ class CircularLinkedList:
 
         return result
 
-    # def __repr__(self):
-    #     result = "[\n"
+    def __repr__(self):
+        result = "[\n"
 
-    #     i = self.head
-    #     for _ in range(self.length):
-    #         result += "\t" + str(i) + ",\n"
-    #         i = i.next
+        i = self.head
+        for _ in range(self.length):
+            result += "\t" + str(i) + ",\n"
+            i = i.next
 
-    #     result += "]"
+        result += "]"
 
-    #     return result
-
-
-if __name__ == "__main__":
-    # TODO: running tests or implement interactions
-    ...
+        return result

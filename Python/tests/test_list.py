@@ -123,3 +123,47 @@ def test_lists():
 
         with pytest.raises(IndexError):
             l2[0] = -1
+
+        l3 = listType([1, 2, 3, 4])
+        l3.add_at_start(0)
+        l3.add_at_end(5)
+
+        # testing len
+        assert len(l3) == 6
+
+        # testing str
+        assert str(l3) == "[0, 1, 2, 3, 4, 5, ]"
+
+        # testing iteration
+        j = 0
+        for i in l3:
+            assert i == j
+            j += 1
+
+        if listType == DoublyLinkedList or listType == CircularDoublyLinkedList:
+            j = 5
+            for i in l3.backwards_iterator():
+                assert j == i
+                j -= 1
+
+        # testing getitem
+        assert l3[0] == 0
+        assert l3[3] == 3
+        assert l3[5] == 5
+
+        # testing setitem
+        l3[1] = -1
+        l3[0] = -10
+        l3[5] = 50
+
+        assert l3.remove_at(1) == -1
+        assert l3.remove_at_start() == -10
+        assert l3.remove_at_end() == 50
+
+        assert len(l3) == 3
+
+        with pytest.raises(IndexError):
+            tmp = l3[-1]
+
+        with pytest.raises(IndexError):
+            l3[3] = -1

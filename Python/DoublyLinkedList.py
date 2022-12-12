@@ -204,7 +204,7 @@ class DoublyLinkedList:
             Any: value of element
         """
         running_node = self.head
-        while running_node is not None:
+        for _ in range(self.length):
             yield running_node.value
             running_node = running_node.next
 
@@ -215,7 +215,7 @@ class DoublyLinkedList:
             Any: value of element
         """
         running_node = self.tail
-        while running_node is not None:
+        for _ in range(self.length):
             yield running_node.value
             running_node = running_node.previous
 
