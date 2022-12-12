@@ -3,20 +3,25 @@ class ListNode:
         self.value = value
         self.next = None
 
-    def __str__(self):
-        if self.next == None:
-            return f"self: {id(self)} next: None"
+    # def __str__(self):
+    #     if self.next is None:
+    #         return f"self: {id(self)} next: None"
 
-        return f"self: {id(self)} next: {id(self.next)}"
+    #     return f"self: {id(self)} next: {id(self.next)}"
 
 
 class CircularLinkedList:
+    """CircularLinkedList"""
+
     def __init__(self, values=None):
+        """initialise the list with values
+
+        Args:
+            values (Iterable): values to be added to list (optional)
+        """
         self.head = None
         self.tail = None
         self.length = 0
-        self._i = None  # Used for iteration
-        self._index = 0  # Used for iteration
 
         if values is None:
             return
@@ -25,11 +30,17 @@ class CircularLinkedList:
             self.add_at_end(i)
 
     def add_at_start(self, value):
+        """add value at the start of list
+        time complexity is O(1)
+
+        Args:
+            value (Any): value to be added
+        """
         old_head = self.head
         self.head = ListNode(value)
-        self.head.next = old_head if old_head != None else self.head
+        self.head.next = old_head if old_head is not None else self.head
 
-        if self.tail == None:
+        if self.tail is None:
             self.tail = self.head
         else:
             self.tail.next = self.head
@@ -37,68 +48,88 @@ class CircularLinkedList:
         self.length += 1
 
     def add_at_end(self, value):
+        """add value at the end of the list
+        time complexity is O(1)
+
+        Args:
+            value (Any): value to be added
+        """
         if self.length == 0:
             self.head = ListNode(value)
             self.head.next = self.head
             self.tail = self.head
             self.length += 1
+            return
 
-        else:
-            i = self.head
-            for _ in range(self.length):
-                current_node = i
-                i = i.next
-
-            current_node.next = ListNode(value)
-            self.tail = current_node.next
-            current_node.next.next = self.head
-            self.length += 1
+        self.tail.next = ListNode(value)
+        self.tail = self.tail.next
+        self.tail.next = self.head
+        self.length += 1
 
     def add_at(self, index, value):
+        """add value at the specified index
+        time complexity is O(n)
+
+        Args:
+            index (int): index to insert at
+            value (Any): value to be added
+
+        Raises:
+            IndexError: when invalid index or negative index is passed
+        """
         if index < 0 or index >= self.length:
             raise IndexError(
                 f"Index out of Bound. Length of list {self.length}, index got to insert at {index}."
             )
 
         if index == 0:
-            new_head = ListNode(value)
-            new_head.next = self.head
-            self.head = new_head
-            self.tail.next = self.head
-            self.length += 1
+            self.add_at_start(value)
+            return
 
-        else:
-            i = 1
-            running_node = self.head
-            while i < index:
-                running_node = running_node.next
-                i += 1
+        running_node = self.head
+        for _ in range(index - 1):
+            running_node = running_node.next
 
-            new_node = ListNode(value)
-            new_node.next = running_node.next
-            running_node.next = new_node
-            self.length += 1
+        new_node = ListNode(value)
+        new_node.next = running_node.next
+        running_node.next = new_node
+        self.length += 1
 
     def remove_at_start(self):
-        if self.head == None:
-            raise IndexError("No elements in list to remove.")
+        """removes the element at beginning of the list
+        time complexity is O(1)
 
-        if self.length == 1:
-            node = self.head
-            self.head = None
-            self.tail = None
-            self.length -= 1
-            return node.value
+        Raises:
+            IndexError: when no element is present in the list
+
+        Returns:
+            Any: element at start of the list
+        """
+        if self.length == 0:
+            raise IndexError("No elements in list to remove.")
 
         node = self.head
         self.head = node.next
         self.tail.next = self.head
+
         self.length -= 1
+        if self.length == 0:
+            self.head = None
+            self.tail = None
 
         return node.value
 
     def remove_at_end(self):
-        if self.head == None:
+        """removes the element at beginning of the list
+        time complexity is O(n)
+
+        Raises:
+            IndexError: when no element is present in the list
+
+        Returns:
+            Any: element at start of the list
+        """
+        if self.length == 0:
             raise IndexError("No elements in list to remove.")
 
         if self.length == 1:
@@ -109,55 +140,53 @@ class CircularLinkedList:
 
             return node.value
 
-        else:
-            i = self.head
-            for _ in range(self.length - 1):
-                current_node = i
-                i = i.next
+        running_node = self.head
+        for _ in range(self.length - 2):
+            running_node = running_node.next
 
-            node = current_node.next
-            current_node.next = self.head
-            self.tail = current_node
-            self.length -= 1
+        node = running_node.next
+        running_node.next = self.head
+        self.tail = running_node
+        self.length -= 1
 
-            return node.value
+        return node.value
 
     def remove_at(self, index):
+        """remove the element present at the given index
+        time complexity is O(n)
+
+        Args:
+            index (int): index of the element to be removed
+
+        Raises:
+            IndexError: when invalid or negative index is passed
+
+        Returns:
+            Any: element at the given index
+        """
         if index < 0 or index >= self.length:
             raise IndexError(
                 f"Index out of Bound. Length of list {self.length}, index got to insert at {index}."
             )
 
-        if self.length == 1:
-            node = self.head
-            self.head = None
-            self.tail = None
-            self.length -= 1
-            return node.value
-
         if index == 0:
-            node = self.head
-            self.head = node.next
-            self.tail.next = self.head
-            self.length -= 1
+            return self.remove_at_start()
 
-            return node.value
+        running_node = self.head
+        for _ in range(index - 1):
+            running_node = running_node.next
 
-        else:
-            i = 1
-            running_node = self.head
-            while i < index:
-                running_node = running_node.next
-                i += 1
+        node = running_node.next
+        running_node.next = node.next
 
-            node = running_node.next
-            running_node.next = node.next
-            self.length -= 1
-
-            return node.value
+        self.length -= 1
+        return node.value
 
     def __len__(self):
         return self.length
+
+    def __iter__(self):
+        return self.iterator()
 
     def iterator(self):
         """forward iterator
@@ -170,17 +199,6 @@ class CircularLinkedList:
             yield running_node.value
             running_node = running_node.next
 
-    def backwards_iterator(self):
-        """backwards iterator
-
-        Yields:
-            Any: value of element
-        """
-        running_node = self.tail
-        for _ in range(self.length):
-            yield running_node.value
-            running_node = running_node.previous
-
     def __getitem__(self, index):
         if index < 0 or index >= self.length:
             raise IndexError(
@@ -188,7 +206,7 @@ class CircularLinkedList:
             )
 
         node = self.head
-        for i in range(index):
+        for _ in range(index):
             node = node.next
 
         return node.value
@@ -200,7 +218,7 @@ class CircularLinkedList:
             )
 
         node = self.head
-        for i in range(index):
+        for _ in range(index):
             node = node.next
 
         node.value = value
@@ -215,14 +233,14 @@ class CircularLinkedList:
 
         return result
 
-    def __repr__(self):
-        result = "[\n"
+    # def __repr__(self):
+    #     result = "[\n"
 
-        i = self.head
-        for _ in range(self.length):
-            result += "\t" + str(i) + ",\n"
-            i = i.next
+    #     i = self.head
+    #     for _ in range(self.length):
+    #         result += "\t" + str(i) + ",\n"
+    #         i = i.next
 
-        result += "]"
+    #     result += "]"
 
-        return result
+    #     return result

@@ -167,3 +167,15 @@ def test_lists():
 
         with pytest.raises(IndexError):
             l3[3] = -1
+
+        l3.add_at_end(5)
+        assert l3.remove_at(2) == 4
+        assert l3.remove_at(2) == 5
+
+        j = 2
+        for i in l3:
+            assert i == j
+            j += 1
+
+        assert l3.remove_at(0) == 2
+        assert l3.remove_at(0) == 3

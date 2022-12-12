@@ -3,11 +3,11 @@ class ListNode:
         self.value = value
         self.next = None
 
-    def __str__(self):
-        if self.next is None:
-            return f"self: {id(self)} next: None"
+    # def __str__(self):
+    #     if self.next is None:
+    #         return f"self: {id(self)} next: None"
 
-        return f"self: {id(self)} next: {id(self.next)}"
+    #     return f"self: {id(self)} next: {id(self.next)}"
 
 
 class LinkedList:
@@ -17,7 +17,7 @@ class LinkedList:
         """initialise the list with values
 
         Args:
-            values (Iterable): value to be added to LinkedList
+            values (Iterable): values to be added to list (optional)
         """
         self.head = None
         self.tail = None
@@ -129,6 +129,7 @@ class LinkedList:
         if self.length == 1:
             node = self.head
             self.head = None
+            self.tail = None
             self.length -= 1
             return node.value
 
@@ -138,7 +139,9 @@ class LinkedList:
 
         node = running_node.next
         running_node.next = None
+        self.tail = running_node
         self.length -= 1
+
         return node.value
 
     def remove_at(self, index):
@@ -187,7 +190,7 @@ class LinkedList:
         running_node = self.head
         for _ in range(self.length):
             yield running_node.value
-            running_node = running_node.next
+            running_node = running_node.next if running_node is not None else None
 
     def __getitem__(self, index):
         if index < 0 or index >= self.length:
@@ -196,7 +199,7 @@ class LinkedList:
             )
 
         node = self.head
-        for i in range(index):
+        for _ in range(index):
             node = node.next
 
         return node.value
@@ -208,7 +211,7 @@ class LinkedList:
             )
 
         node = self.head
-        for i in range(index):
+        for _ in range(index):
             node = node.next
 
         node.value = value
@@ -223,14 +226,14 @@ class LinkedList:
 
         return result
 
-    def __repr__(self):
-        result = "[\n"
+    # def __repr__(self):
+    #     result = "[\n"
 
-        i = self.head
-        while i is not None:
-            result += "\t" + str(i) + ",\n"
-            i = i.next
+    #     i = self.head
+    #     while i is not None:
+    #         result += "\t" + str(i) + ",\n"
+    #         i = i.next
 
-        result += "]"
+    #     result += "]"
 
-        return result
+    #     return result

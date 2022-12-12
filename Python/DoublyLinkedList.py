@@ -4,17 +4,17 @@ class DListNode:
         self.next = None
         self.previous = None
 
-    def __str__(self):
-        if self.next is None and self.previous is None:
-            return f"previous: None self: {id(self)} next: None"
+    # def __str__(self):
+    #     if self.next is None and self.previous is None:
+    #         return f"previous: None self: {id(self)} next: None"
 
-        elif self.next is None:
-            return f"previous: {id(self.previous)} self: {id(self)} next: None"
+    #     elif self.next is None:
+    #         return f"previous: {id(self.previous)} self: {id(self)} next: None"
 
-        elif self.previous is None:
-            return f"previous: None self: {id(self)} next: {id(self.next)}"
+    #     elif self.previous is None:
+    #         return f"previous: None self: {id(self)} next: {id(self.next)}"
 
-        return f"previous: {id(self.previous)} self: {id(self)} next: {id(self.next)}"
+    #     return f"previous: {id(self.previous)} self: {id(self)} next: {id(self.next)}"
 
 
 class DoublyLinkedList:
@@ -24,7 +24,7 @@ class DoublyLinkedList:
         """initialise the list with values
 
         Args:
-            values (Iterable): value to be added to LinkedList
+            values (Iterable): values to be added to list (optional)
         """
         self.head = None
         self.tail = None
@@ -118,13 +118,12 @@ class DoublyLinkedList:
 
         node = self.head
         self.head = node.next
-        if self.head:
+        if self.head is not None:
             self.head.previous = None
 
+        self.length -= 1
         if self.length == 0:
             self.tail = None
-
-        self.length -= 1
 
         return node.value
 
@@ -138,19 +137,20 @@ class DoublyLinkedList:
         Returns:
             Any: element at end of the list
         """
-        if self.head is None:
+        if self.length == 0:
             raise IndexError("No elements in list to remove.")
 
         if self.length == 1:
-            node = self.head
+            node = self.tail
             self.head = None
+            self.tail = None
             self.length -= 1
-
             return node.value
 
         node = self.tail
         self.tail = node.previous
         self.tail.next = None
+
         self.length -= 1
 
         return node.value
@@ -226,7 +226,7 @@ class DoublyLinkedList:
             )
 
         node = self.head
-        for i in range(index):
+        for _ in range(index):
             node = node.next
 
         return node.value
@@ -238,7 +238,7 @@ class DoublyLinkedList:
             )
 
         node = self.head
-        for i in range(index):
+        for _ in range(index):
             node = node.next
 
         node.value = value
@@ -253,14 +253,14 @@ class DoublyLinkedList:
 
         return result
 
-    def __repr__(self):
-        result = "[\n"
+    # def __repr__(self):
+    #     result = "[\n"
 
-        i = self.head
-        while i is not None:
-            result += "\t" + str(i) + ",\n"
-            i = i.next
+    #     i = self.head
+    #     while i is not None:
+    #         result += "\t" + str(i) + ",\n"
+    #         i = i.next
 
-        result += "]"
+    #     result += "]"
 
-        return result
+    #     return result
