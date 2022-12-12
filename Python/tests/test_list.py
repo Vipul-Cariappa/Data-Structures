@@ -3,7 +3,6 @@ from Python.CircularLinkedList import CircularLinkedList
 from Python.DoublyLinkedList import DoublyLinkedList
 from Python.CircularDoublyLinkedList import CircularDoublyLinkedList
 import pytest
-from pytest_subtests import subtests
 
 
 def test_lists():
