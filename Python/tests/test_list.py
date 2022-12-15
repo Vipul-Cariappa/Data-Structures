@@ -179,3 +179,17 @@ def test_lists():
 
         assert l3.remove_at(0) == 2
         assert l3.remove_at(0) == 3
+
+
+def test_CircularDoublyLinkedList():
+    l1 = CircularDoublyLinkedList()
+    l1.extend([1, 2, 3, 4])
+
+    assert l1.remove_by_value(1) == 1
+    assert l1.remove_by_value(4) == 4
+
+    with pytest.raises(ValueError):
+        l1.remove_by_value("error")
+
+    assert l1.remove_by_value(2) == 2
+    assert l1.remove_by_value(3) == 3

@@ -49,15 +49,12 @@ class CircularDoublyLinkedList:
         if old_head is not None:
             old_head.previous = self.head
             self.head.next = old_head
-        else:
-            self.head.next = self.head
-
-        if self.tail is None:
-            self.tail = self.head
+            self.tail.next = self.head
             self.head.previous = self.tail
         else:
-            self.tail.next = self.head
+            self.head.next = self.head
             self.head.previous = self.head
+            self.tail = self.head
 
         self.length += 1
 
@@ -80,6 +77,7 @@ class CircularDoublyLinkedList:
         self.tail.next.previous = self.tail
         self.tail = self.tail.next
         self.tail.next = self.head
+        self.head.previous = self.tail
         self.length += 1
 
     def add_at(self, index, value):
@@ -112,6 +110,15 @@ class CircularDoublyLinkedList:
         new_node.next.previous = new_node
         running_node.next = new_node
         self.length += 1
+
+    def extend(self, values):
+        """add values to the end of the list
+
+        Args:
+            values (Iterable): values to be added to list
+        """
+        for i in values:
+            self.add_at_end(i)
 
     def remove_at_start(self):
         """removes the element at beginning of the list
@@ -204,6 +211,44 @@ class CircularDoublyLinkedList:
         self.length -= 1
 
         return node.value
+
+    def remove_by_value(self, value):
+        """remove the first occurrence of value in list
+
+        Args:
+            value (Any): value of the element to be returned
+
+        Raises:
+            ValueError: when no element with the given value is present in the list
+
+        Returns:
+            Any: returns the argument value
+        """
+        i = 0
+        running_node = self.head
+        while i < self.length:
+            if running_node.value == value:
+                running_node.previous.next = running_node.next
+                running_node.next.previous = running_node.previous
+                self.length -= 1
+
+                # update self.head and self.tail if removed from start or end
+                if i == 0:
+                    self.head = running_node.next
+                elif i == self.length:
+                    self.tail = running_node.previous
+
+                # set head and tail to None if length is 0
+                if self.length == 0:
+                    self.head = None
+                    self.tail = None
+
+                return running_node.value
+
+            running_node = running_node.next
+            i += 1
+
+        raise ValueError("No element with the given value found")
 
     def __len__(self):
         return self.length
